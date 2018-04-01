@@ -20,8 +20,8 @@
         receivedElement.setAttribute('style', 'display:block;');
 
         var messageBox = document.getElementById('message');
-        var background = document.getElementById('background');
-        var hammertime = new Hammer(background);
+        var swipearea = document.getElementById('swipearea');
+        var hammertime = new Hammer(swipearea);
         hammertime.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
         hammertime.on('swipeleft swiperight swipeup swipedown', function (ev) {
             messageBox.textContent = ev.type + "detected";
