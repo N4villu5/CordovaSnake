@@ -43,7 +43,7 @@ body {
     z-index: -1;
 }
 
-.app {
+/*.app {
     background: url(../images/cordova.png) no-repeat center top; 
     position: absolute;             
     left: 50%;
@@ -106,4 +106,4 @@ h1 {
 .blink {
     -webkit-animation: fade 3000ms infinite;
     animation: fade 3000ms infinite;
-}
+}*/

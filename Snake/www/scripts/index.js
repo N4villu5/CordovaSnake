@@ -9,7 +9,7 @@
 
     let screenWidth = document.body.clientWidth;
     let tileCount = 20;
-    let canvasSize = (screenWidth - 20) - (screenWidth % tileCount);    
+    let canvasSize = screenWidth - 20 - screenWidth % tileCount;    
     let tileSize = canvasSize / tileCount;
     let positionX = 10;
     let positionY = 10;
@@ -28,7 +28,6 @@
     let hammertime = new Hammer(swipearea);
     hammertime.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
     hammertime.on('swipeleft swiperight swipeup swipedown', function (ev) {
-        messageBox.textContent = ev.type + "detected";
         switch (ev.type) {
             case 'swipeleft':
                 velocityX = -1; velocityY = 0;
@@ -52,11 +51,6 @@
         document.addEventListener( 'resume', onResume.bind( this ), false );
         
         // TODO: Cordova has been loaded. Perform any initialization that requires Cordova here.
-        //var parentElement = document.getElementById('deviceready');
-        //var listeningElement = parentElement.querySelector('.listening');
-        //var receivedElement = parentElement.querySelector('.received');
-        //listeningElement.setAttribute('style', 'display:none;');
-        //receivedElement.setAttribute('style', 'display:block;');
     }
 
     function game() {
@@ -83,7 +77,7 @@
 
         for (let i = 0; i < trail.length; i++) {
             ctx.fillRect(trail[i].x * tileSize, trail[i].y * tileSize, tileSize - 2, tileSize - 2);
-            if (trail[i].x == positionX && trail[i].y == positionY) {
+            if (trail[i].x === positionX && trail[i].y === positionY) {
                 tail = 5;
             }
         }
