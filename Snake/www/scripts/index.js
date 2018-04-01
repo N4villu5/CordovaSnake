@@ -7,9 +7,44 @@
 
     document.addEventListener('deviceready', onDeviceReady.bind(this), false);
 
-    let canvasSize = document.body.clientWidth - 20;
+    let screenWidth = document.body.clientWidth;
+    let tileCount = 20;
+    let canvasSize = (screenWidth - 20) - (screenWidth % tileCount);    
+    let tileSize = canvasSize / tileCount;
+    let positionX = 10;
+    let positionY = 10;
+    let velocityX = 0;
+    let velocityY = 0;
+    let trail = [];
+    let tail = 5;
 
     document.body.innerHTML += '<canvas id="gc" height="' + canvasSize + '" width="' + canvasSize + '"></canvas>';
+    
+    let canvas = document.getElementById("gc");
+    let ctx = canvas.getContext("2d");
+
+    let messageBox = document.getElementById('message');
+    let swipearea = document.getElementById('swipearea');
+    let hammertime = new Hammer(swipearea);
+    hammertime.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+    hammertime.on('swipeleft swiperight swipeup swipedown', function (ev) {
+        messageBox.textContent = ev.type + "detected";
+        switch (ev.type) {
+            case 'swipeleft':
+                velocityX = -1; velocityY = 0;
+                break;
+            case 'swipeup':
+                velocityX = 0; velocityY = -1;
+                break;
+            case 'swiperight':
+                velocityX = 1; velocityY = 0;
+                break;
+            case 'swipedown':
+                velocityX = 0; velocityY = 1;
+                break;
+        }
+    });
+    setInterval(game, 1000 / 10);
 
     function onDeviceReady() {
         // Handle the Cordova pause and resume events
@@ -17,22 +52,47 @@
         document.addEventListener( 'resume', onResume.bind( this ), false );
         
         // TODO: Cordova has been loaded. Perform any initialization that requires Cordova here.
-        var parentElement = document.getElementById('deviceready');
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
+        //var parentElement = document.getElementById('deviceready');
+        //var listeningElement = parentElement.querySelector('.listening');
+        //var receivedElement = parentElement.querySelector('.received');
+        //listeningElement.setAttribute('style', 'display:none;');
+        //receivedElement.setAttribute('style', 'display:block;');
+    }
 
-        var messageBox = document.getElementById('message');
-        var swipearea = document.getElementById('swipearea');
-        var hammertime = new Hammer(swipearea);
-        hammertime.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
-        hammertime.on('swipeleft swiperight swipeup swipedown', function (ev) {
-            messageBox.textContent = ev.type + "detected";
-        });
+    function game() {
+        positionX += velocityX;
+        positionY += velocityY;
 
-        var canvas = document.getElementById("gc");
-        var ctx = canvas.getContext("2d");
+        // wrap around screen
+        if (positionX < 0) {
+            positionX = tileCount - 1;
+        }
+        if (positionX > tileCount - 1) {
+            positionX = 0;
+        }
+        if (positionY < 0) {
+            positionY = tileCount - 1;
+        }
+        if (positionY > tileCount - 1) {
+            positionY = 0;
+        }
+
+        ctx.clearRect(0, 0, canvasSize, canvasSize);
+
+        ctx.fillStyle = "lime";
+
+        for (let i = 0; i < trail.length; i++) {
+            ctx.fillRect(trail[i].x * tileSize, trail[i].y * tileSize, tileSize - 2, tileSize - 2);
+            if (trail[i].x == positionX && trail[i].y == positionY) {
+                tail = 5;
+            }
+        }
+
+        trail.push({ x: positionX, y: positionY });
+
+        while (trail.length > tail) {
+            trail.shift();
+        }
     }
 
     function onPause() {
