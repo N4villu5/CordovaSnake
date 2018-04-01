@@ -5,7 +5,11 @@
 (function () {
     "use strict";
 
-    document.addEventListener( 'deviceready', onDeviceReady.bind( this ), false );
+    document.addEventListener('deviceready', onDeviceReady.bind(this), false);
+
+    let canvasSize = document.body.clientWidth - 20;
+
+    document.body.innerHTML += '<canvas id="gc" height="' + canvasSize + '" width="' + canvasSize + '"></canvas>';
 
     function onDeviceReady() {
         // Handle the Cordova pause and resume events
@@ -27,6 +31,8 @@
             messageBox.textContent = ev.type + "detected";
         });
 
+        var canvas = document.getElementById("gc");
+        var ctx = canvas.getContext("2d");
     }
 
     function onPause() {
