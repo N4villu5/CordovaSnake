@@ -18,6 +18,15 @@
         var receivedElement = parentElement.querySelector('.received');
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
+
+        var messageBox = document.getElementById('message');
+        var background = document.getElementById('background');
+        var hammertime = new Hammer(background);
+        hammertime.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+        hammertime.on('swipeleft swiperight swipeup swipedown', function (ev) {
+            messageBox.textContent = ev.type + "detected";
+        });
+
     }
 
     function onPause() {
