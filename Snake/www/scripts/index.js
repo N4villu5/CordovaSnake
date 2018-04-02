@@ -18,6 +18,9 @@
     let trail = [];
     let tail = 5;
 
+    let appleX = 5;
+    let appleY = 15;
+
     document.body.innerHTML += '<canvas id="gc" height="' + canvasSize + '" width="' + canvasSize + '"></canvas>';
     
     let canvas = document.getElementById("gc");
@@ -25,25 +28,21 @@
 
     let messageBox = document.getElementById('message');
     let swipearea = document.getElementById('swipearea');
-    let hammertime = new Hammer(swipearea);
-    hammertime.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
-    hammertime.on('swipeleft swiperight swipeup swipedown', function (ev) {
-        switch (ev.type) {
-            case 'swipeleft':
-                velocityX = -1; velocityY = 0;
-                break;
-            case 'swipeup':
-                velocityX = 0; velocityY = -1;
-                break;
-            case 'swiperight':
-                velocityX = 1; velocityY = 0;
-                break;
-            case 'swipedown':
-                velocityX = 0; velocityY = 1;
-                break;
-        }
+    let gestures = new Hammer(swipearea);
+    gestures.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+    gestures.on('panleft', function () {
+        velocityX = -1; velocityY = 0;
     });
-    setInterval(game, 1000 / 10);
+    gestures.on('panright', function () {
+        velocityX = 1; velocityY = 0;
+    });
+    gestures.on('panup', function () {
+        velocityX = 0; velocityY = -1;
+    });
+    gestures.on('pandown', function () {
+        velocityX = 0; velocityY = 1;
+    });
+    setInterval(game, 1000 / 15);
 
     function onDeviceReady() {
         // Handle the Cordova pause and resume events
@@ -87,6 +86,14 @@
         while (trail.length > tail) {
             trail.shift();
         }
+
+        if (appleX == positionX && appleY == positionY) {
+            tail++;
+            appleX = Math.floor(Math.random() * tileCount);
+            appleY = Math.floor(Math.random() * tileCount);
+        }
+        ctx.fillStyle = "red";
+        ctx.fillRect(appleX * tileSize, appleY * tileSize, tileSize - 2, tileSize - 2);
     }
 
     function onPause() {
