@@ -31,16 +31,24 @@
     let gestures = new Hammer(swipearea);
     gestures.get('pan').set({ direction: Hammer.DIRECTION_ALL });
     gestures.on('panleft', function () {
-        velocityX = -1; velocityY = 0;
+        if (velocityX === 0){
+            velocityX = -1; velocityY = 0;
+        }
     });
-    gestures.on('panright', function () {
-        velocityX = 1; velocityY = 0;
+    gestures.on('panright', function () {        
+        if (velocityX === 0) {
+            velocityX = 1; velocityY = 0;
+        }
     });
     gestures.on('panup', function () {
-        velocityX = 0; velocityY = -1;
+        if (velocityY === 0) {
+            velocityX = 0; velocityY = -1;
+        }
     });
     gestures.on('pandown', function () {
-        velocityX = 0; velocityY = 1;
+        if (velocityY === 0) {
+            velocityX = 0; velocityY = 1;
+        }
     });
     setInterval(game, 1000 / 15);
 
@@ -87,7 +95,7 @@
             trail.shift();
         }
 
-        if (appleX == positionX && appleY == positionY) {
+        if (appleX === positionX && appleY === positionY) {
             tail++;
             appleX = Math.floor(Math.random() * tileCount);
             appleY = Math.floor(Math.random() * tileCount);
