@@ -28,6 +28,9 @@
 
     let messageBox = document.getElementById('message');
     let swipearea = document.getElementById('swipearea');
+
+    let score = document.getElementById('score');
+
     let gestures = new Hammer(swipearea);
     gestures.get('pan').set({ direction: Hammer.DIRECTION_ALL });
     gestures.on('panleft', function () {
@@ -97,6 +100,7 @@
 
         if (appleX === positionX && appleY === positionY) {
             tail++;
+            score.textContent = 'Score: ' + (tail - 5);
             appleX = Math.floor(Math.random() * tileCount);
             appleY = Math.floor(Math.random() * tileCount);
         }
